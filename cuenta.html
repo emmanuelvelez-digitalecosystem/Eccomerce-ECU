@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crea tu cuenta | Siigo Contífico</title>
+  <style>
+    :root {
+      --siigo-blue:      #009DFF;
+      --siigo-blue-dark: #007ECC;
+      --siigo-green:     #7AC23A;
+      --siigo-green-dark:#619B2E;
+      --siigo-yellow:    #FFA532;
+      --siigo-gray-bg:   #F5F7FA;
+      --siigo-gray-text: #6B7280;
+      --siigo-dark:      #1A1A2E;
+      --white:           #FFFFFF;
+      --radius:          12px;
+      --shadow:          0 4px 20px rgba(0,0,0,.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--siigo-gray-bg);
+      color: var(--siigo-dark);
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR simplificado (sin fuga) ── */
+    nav {
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 40px;
+      height: 64px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+    .nav-logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--siigo-blue);
+      letter-spacing: -0.5px;
+    }
+    .nav-logo span { color: var(--siigo-green); }
+
+    /* ── LAYOUT PRINCIPAL ── */
+    .page-wrapper {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 56px 24px 80px;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 40px;
+      align-items: start;
+    }
+
+    /* ── COLUMNA IZQUIERDA: FORMULARIO ── */
+    .form-section {
+      background: transparent;
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .form-header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--siigo-dark);
+      margin-bottom: 12px;
+    }
+    .form-header p {
+      font-size: .95rem;
+      color: var(--siigo-gray-text);
+      line-height: 1.6;
+      max-width: 460px;
+      margin: 0 auto;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .input-group.full { grid-column: 1 / -1; }
+
+    .input-group label {
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--siigo-gray-text);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 8px;
+      font-size: .92rem;
+      color: var(--siigo-dark);
+      background: var(--white);
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .input-wrap input::placeholder { color: #B0B8C8; }
+    .input-wrap input:focus {
+      border-color: var(--siigo-blue);
+      box-shadow: 0 0 0 3px rgba(0,157,255,.12);
+    }
+    .input-wrap input.error {
+      border-color: #EF4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,.1);
+    }
+    .input-wrap input.success {
+      border-color: var(--siigo-green);
+    }
+
+    .required-star { color: var(--siigo-yellow); margin-left: 2px; }
+
+    .hint {
+      font-size: .75rem;
+      margin-top: 4px;
+      display: none;
+    }
+    .hint.error  { color: #EF4444; display: block; }
+    .hint.success{ color: var(--siigo-green); display: block; }
+
+    /* Icono de validación */
+    .input-wrap .icon-check {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      display: none;
+    }
+    .input-wrap input.success ~ .icon-check { display: block; color: var(--siigo-green); }
+    .input-wrap input.error  ~ .icon-check { display: block; color: #EF4444; }
+
+    /* Términos */
+    .terms-text {
+      margin-top: 24px;
+      font-size: .78rem;
+      color: var(--siigo-gray-text);
+      line-height: 1.6;
+      text-align: center;
+    }
+    .terms-text a { color: var(--siigo-blue); text-decoration: none; }
+    .terms-text a:hover { text-decoration: underline; }
+
+    /* reCAPTCHA mock */
+    .recaptcha-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+      color: #9CA3AF;
+      font-size: .78rem;
+    }
+    .recaptcha-icon {
+      width: 28px;
+      height: 28px;
+      border: 2px solid #CBD5E1;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .9rem;
+    }
+
+    /* Botón submit */
+    .btn-submit {
+      display: block;
+      width: 100%;
+      max-width: 280px;
+      margin: 24px auto 0;
+      padding: 14px;
+      background: var(--siigo-blue);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+    }
+    .btn-submit:hover { background: var(--siigo-blue-dark); transform: translateY(-1px); }
+    .btn-submit:disabled {
+      background: #CBD5E1;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── COLUMNA DERECHA: RESUMEN ── */
+    .summary-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 24px;
+      position: sticky;
+      top: 24px;
+    }
+
+    .summary-card h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--siigo-dark);
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #F0F0F0;
+    }
+
+    .summary-label {
+      font-size: .78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--siigo-gray-text);
+      margin-bottom: 12px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      font-size: .88rem;
+    }
+
+    .summary-product-name {
+      color: var(--siigo-dark);
+      font-weight: 500;
+      flex: 1;
+      line-height: 1.4;
+    }
+
+    .summary-ver-detalle {
+      color: var(--siigo-blue);
+      font-size: .78rem;
+      font-weight: 600;
+      text-decoration: none;
+      margin: 0 10px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .summary-ver-detalle:hover { text-decoration: underline; }
+
+    .summary-price {
+      font-weight: 600;
+      color: var(--siigo-dark);
+      white-space: nowrap;
+    }
+
+    .summary-discount {
+      color: var(--siigo-green);
+      font-weight: 600;
+    }
+
+    .summary-divider {
+      border: none;
+      border-top: 1px solid #F0F0F0;
+      margin: 16px 0;
+    }
+
+    .summary-subtotal-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: .88rem;
+      color: var(--siigo-gray-text);
+      margin-bottom: 8px;
+    }
+
+    /* Cupón */
+    .coupon-row {
+      display: flex;
+      gap: 8px;
+      margin: 16px 0;
+    }
+    .coupon-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 8px;
+      font-size: .85rem;
+      color: var(--siigo-dark);
+      outline: none;
+      transition: border-color .2s;
+    }
+    .coupon-input::placeholder { color: #B0B8C8; }
+    .coupon-input:focus { border-color: var(--siigo-blue); }
+
+    .btn-validar {
+      padding: 10px 16px;
+      background: transparent;
+      color: var(--siigo-blue);
+      border: 1.5px solid var(--siigo-blue);
+      border-radius: 8px;
+      font-size: .85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+      white-space: nowrap;
+    }
+    .btn-validar:hover { background: var(--siigo-blue); color: var(--white); }
+
+    .coupon-msg {
+      font-size: .75rem;
+      margin-top: 4px;
+      display: none;
+    }
+    .coupon-msg.error   { color: #EF4444; display: block; }
+    .coupon-msg.success { color: var(--siigo-green); display: block; }
+
+    .summary-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      border-top: 2px solid var(--siigo-dark);
+      margin-top: 8px;
+    }
+    .summary-total-label {
+      font-size: .95rem;
+      font-weight: 800;
+      color: var(--siigo-dark);
+    }
+    .summary-total-value {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--siigo-dark);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--siigo-dark);
+      color: rgba(255,255,255,.5);
+      text-align: center;
+      padding: 20px;
+      font-size: .8rem;
+    }
+    footer span { color: var(--white); font-weight: 600; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .page-wrapper {
+        grid-template-columns: 1fr;
+        padding: 32px 16px 60px;
+        gap: 32px;
+      }
+      .summary-card { position: static; order: -1; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR simplificado -->
+<nav>
+  <div class="nav-logo">Siigo <span>Contífico</span></div>
+</nav>
+
+<!-- CONTENIDO -->
+<div class="page-wrapper">
+
+  <!-- FORMULARIO -->
+  <div class="form-section">
+    <div class="form-header">
+      <h1>Crea tu cuenta</h1>
+      <p>Es rápido y sencillo, ingresa los siguientes datos y explora todas las herramientas y características que tenemos para ti.</p>
+    </div>
+
+    <div class="form-grid">
+
+      <!-- Nombres y apellidos -->
+      <div class="input-group full">
+        <label>Nombres y apellidos <span class="required-star">*</span></label>
+        <div class="input-wrap">
+          <input type="text" id="nombre" placeholder="Nombres y apellidos" autocomplete="name" />
+          <span class="icon-check">✓</span>
+        </div>
+        <span class="hint" id="hint-nombre"></span>
+      </div>
+
+      <!-- Celular -->
+      <div class="input-group full">
+        <label>Celular <span class="required-star">*</span></label>
+        <div class="input-wrap">
+          <input type="tel" id="celular" placeholder="Celular" autocomplete="tel" maxlength="10" />
+          <span class="icon-check">✓</span>
+        </div>
+        <span class="hint" id="hint-celular"></span>
+      </div>
+
+      <!-- Email -->
+      <div class="input-group">
+        <label>E-mail <span class="required-star">*</span></label>
+        <div class="input-wrap">
+          <input type="email" id="email" placeholder="E-mail" autocomplete="email" />
+          <span class="icon-check">✓</span>
+        </div>
+        <span class="hint" id="hint-email"></span>
+      </div>
+
+      <!-- Confirmar email -->
+      <div class="input-group">
+        <label>Confirmar e-mail <span class="required-star">*</span></label>
+        <div class="input-wrap">
+          <input type="email" id="email-confirm" placeholder="Confirmar e-mail" autocomplete="off" />
+          <span class="icon-check">✓</span>
+        </div>
+        <span class="hint" id="hint-email-confirm"></span>
+      </div>
+
+    </div>
+
+    <!-- Términos -->
+    <p class="terms-text">
+      Al dar clic, autorizo que Siigo contifico trate mis datos conforme a lo descrito en la
+      <a href="#">Política de Privacidad</a>, cree una cuenta con mis datos en https://app.contifico.com/
+      y me ofrezca servicios propios y/o de terceros.<br><br>
+      Consulta <a href="#">aquí</a> la información sobre el tiempo de entrega de las credenciales
+      del servicio, así como los requisitos y el procedimiento para solicitar el retracto de tu compra.
+    </p>
+
+    <!-- reCAPTCHA -->
+    <div class="recaptcha-row">
+      <div class="recaptcha-icon">🔐</div>
+      protected by reCAPTCHA. <a href="#" style="color:var(--siigo-blue);text-decoration:none;font-size:.78rem;">Privacy</a> –
+      <a href="#" style="color:var(--siigo-blue);text-decoration:none;font-size:.78rem;">Terms</a>
+    </div>
+
+    <!-- Botón -->
+    <button class="btn-submit" id="btn-submit" disabled onclick="handleSubmit()">
+      Crea tu cuenta
+    </button>
+  </div>
+
+  <!-- RESUMEN DE COMPRA -->
+  <aside class="summary-card">
+    <h3>Resumen de compra</h3>
+
+    <div class="summary-label">Producto</div>
+
+    <div class="summary-row">
+      <span class="summary-product-name">Sistema Contable Esencial</span>
+      <a class="summary-ver-detalle" onclick="toggleDetalle()">Ver detalle</a>
+      <span class="summary-price">$441.00</span>
+    </div>
+
+    <div class="summary-row" id="detalle-wrap" style="display:none; flex-direction:column; gap:6px; padding: 8px 12px; background:#F8FAFC; border-radius:8px; font-size:.82rem; color:var(--siigo-gray-text); margin-bottom:6px;">
+      <span>✓ Documentos electrónicos ilimitados</span>
+      <span>✓ 2 usuarios + 1 usuario contador</span>
+      <span>✓ Contabilidad completa</span>
+      <span>✓ Inventario y compras</span>
+      <span>✓ Soporte ilimitado</span>
+      <span>✓ App Contífico</span>
+    </div>
+
+    <div class="summary-row">
+      <span style="color:var(--siigo-gray-text); font-size:.85rem;">↳ Descuento (20%)</span>
+      <span class="summary-discount">-$88.20</span>
+    </div>
+
+    <hr class="summary-divider" />
+
+    <div class="summary-subtotal-row">
+      <span>Subtotal</span>
+      <span style="color:var(--siigo-dark); font-weight:600;">$352,80</span>
+    </div>
+    <div class="summary-subtotal-row">
+      <span>Impuestos</span>
+      <span style="color:var(--siigo-dark); font-weight:600;">$0</span>
+    </div>
+
+    <!-- Cupón -->
+    <div class="coupon-row">
+      <input class="coupon-input" type="text" id="coupon-input" placeholder="Código de descuento" />
+      <button class="btn-validar" onclick="validarCupon()">Validar</button>
+    </div>
+    <span class="coupon-msg" id="coupon-msg"></span>
+
+    <!-- Total -->
+    <div class="summary-total-row">
+      <span class="summary-total-label">Total a pagar / año</span>
+      <span class="summary-total-value" id="total-value">$352.80</span>
+    </div>
+  </aside>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  &copy; 2025 <span>Siigo Contífico Ecuador</span> · Todos los derechos reservados
+</footer>
+
+<script>
+  // ── Validaciones ──
+  const fields = {
+    nombre:        { el: document.getElementById('nombre'),        hint: document.getElementById('hint-nombre') },
+    celular:       { el: document.getElementById('celular'),       hint: document.getElementById('hint-celular') },
+    email:         { el: document.getElementById('email'),         hint: document.getElementById('hint-email') },
+    'email-confirm': { el: document.getElementById('email-confirm'), hint: document.getElementById('hint-email-confirm') }
+  };
+
+  function setStatus(key, status, msg) {
+    const { el, hint } = fields[key];
+    el.className = status;          // '', 'error', 'success'
+    hint.className = 'hint ' + (status || '');
+    hint.textContent = msg || '';
+  }
+
+  function validateNombre() {
+    const v = fields.nombre.el.value.trim();
+    if (!v) { setStatus('nombre', 'error', 'Este campo es obligatorio'); return false; }
+    if (!/^[a-zA-ZÀ-ÿ\s]{3,}$/.test(v)) { setStatus('nombre', 'error', 'Solo letras, mínimo 3 caracteres'); return false; }
+    setStatus('nombre', 'success', ''); return true;
+  }
+
+  function validateCelular() {
+    const v = fields.celular.el.value.trim();
+    if (!v) { setStatus('celular', 'error', 'Este campo es obligatorio'); return false; }
+    if (!/^[0-9]{9,10}$/.test(v)) { setStatus('celular', 'error', 'Ingresa un número válido (9-10 dígitos)'); return false; }
+    setStatus('celular', 'success', ''); return true;
+  }
+
+  function validateEmail() {
+    const v = fields.email.el.value.trim();
+    if (!v) { setStatus('email', 'error', 'Este campo es obligatorio'); return false; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { setStatus('email', 'error', 'Ingresa un e-mail válido'); return false; }
+    setStatus('email', 'success', ''); return true;
+  }
+
+  function validateEmailConfirm() {
+    const v  = fields['email-confirm'].el.value.trim();
+    const v2 = fields.email.el.value.trim();
+    if (!v) { setStatus('email-confirm', 'error', 'Este campo es obligatorio'); return false; }
+    if (v !== v2) { setStatus('email-confirm', 'error', 'Los e-mails no coinciden'); return false; }
+    setStatus('email-confirm', 'success', ''); return true;
+  }
+
+  function checkAll() {
+    const ok = [
+      fields.nombre.el.classList.contains('success'),
+      fields.celular.el.classList.contains('success'),
+      fields.email.el.classList.contains('success'),
+      fields['email-confirm'].el.classList.contains('success')
+    ].every(Boolean);
+    document.getElementById('btn-submit').disabled = !ok;
+  }
+
+  fields.nombre.el.addEventListener('blur', () => { validateNombre(); checkAll(); });
+  fields.celular.el.addEventListener('blur', () => { validateCelular(); checkAll(); });
+  fields.email.el.addEventListener('blur', () => { validateEmail(); checkAll(); });
+  fields['email-confirm'].el.addEventListener('blur', () => { validateEmailConfirm(); checkAll(); });
+
+  // Solo números en celular
+  fields.celular.el.addEventListener('input', () => {
+    fields.celular.el.value = fields.celular.el.value.replace(/\D/g,'');
+  });
+
+  // ── Ver detalle toggle ──
+  function toggleDetalle() {
+    const d = document.getElementById('detalle-wrap');
+    d.style.display = d.style.display === 'none' ? 'flex' : 'none';
+  }
+
+  // ── Cupón ──
+  const CUPONES = { 'SIIGO10': 10, 'EC20': 20 };
+  let descuentoCupon = 0;
+
+  function validarCupon() {
+    const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+    const msg  = document.getElementById('coupon-msg');
+    const base = 138600;
+
+    if (!code) { msg.className = 'coupon-msg error'; msg.textContent = 'Ingresa un código de descuento'; return; }
+
+    if (CUPONES[code]) {
+      const pct = CUPONES[code];
+      descuentoCupon = Math.round(base * pct / 100);
+      const total = base - descuentoCupon;
+      document.getElementById('total-value').textContent = '$' + total.toLocaleString('es-CO');
+      msg.className = 'coupon-msg success';
+      msg.textContent = `✓ Cupón aplicado: ${pct}% de descuento adicional`;
+    } else {
+      descuentoCupon = 0;
+      document.getElementById('total-value').textContent = '$138.600';
+      msg.className = 'coupon-msg error';
+      msg.textContent = 'Código inválido o caducado';
+    }
+  }
+
+  // ── Submit ──
+  function handleSubmit() {
+    const ok = [validateNombre(), validateCelular(), validateEmail(), validateEmailConfirm()].every(Boolean);
+    if (ok) {
+      document.getElementById('btn-submit').textContent = 'Procesando...';
+      document.getElementById('btn-submit').disabled = true;
+      setTimeout(() => {
+        window.location.href = 'pago.html';
+      }, 800);
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Siigo Contífico | Software Contable y Administrativo</title>
+  <style>
+    /* ── Design Tokens Siigo ── */
+    :root {
+      --siigo-blue:      #009DFF;
+      --siigo-blue-dark: #007ECC;
+      --siigo-green:     #7AC23A;
+      --siigo-green-dark:#619B2E;
+      --siigo-yellow:    #FFA532;
+      --siigo-gray-bg:   #F5F7FA;
+      --siigo-gray-text: #6B7280;
+      --siigo-dark:      #1A1A2E;
+      --white:           #FFFFFF;
+      --radius:          12px;
+      --shadow:          0 4px 20px rgba(0,0,0,.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--siigo-gray-bg);
+      color: var(--siigo-dark);
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 64px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--siigo-blue);
+      letter-spacing: -0.5px;
+    }
+    .nav-logo span { color: var(--siigo-green); }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--siigo-dark);
+      font-size: .9rem;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--siigo-blue); }
+
+    .nav-cta {
+      background: var(--siigo-blue);
+      color: var(--white);
+      border: none;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: .88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .nav-cta:hover { background: var(--siigo-blue-dark); }
+
+    /* ── BANNER ── */
+    .banner {
+      background: linear-gradient(135deg, var(--siigo-blue) 0%, #0044CC 60%, #0055FF 100%);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 64px 80px;
+      min-height: 420px;
+      gap: 40px;
+    }
+
+    .banner-content { max-width: 520px; }
+
+    .banner-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      color: var(--white);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    .banner h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 18px;
+    }
+    .banner h1 span { color: var(--siigo-yellow); }
+
+    .banner p {
+      font-size: 1rem;
+      line-height: 1.7;
+      opacity: .88;
+      margin-bottom: 32px;
+    }
+
+    .banner-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    .btn-primary {
+      background: var(--siigo-green);
+      color: var(--white);
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: .95rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+    }
+    .btn-primary:hover { background: var(--siigo-green-dark); transform: translateY(-1px); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: .95rem;
+      font-weight: 600;
+      border: 2px solid rgba(255,255,255,.6);
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+    .btn-secondary:hover { border-color: var(--white); }
+
+    /* Illustration placeholder */
+    .banner-img {
+      width: 340px;
+      height: 260px;
+      background: rgba(255,255,255,.12);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      gap: 12px;
+    }
+    .banner-img svg { opacity: .7; }
+    .banner-img p { opacity: .6; font-size: .85rem; }
+
+    /* ── PRICING SECTION ── */
+    .pricing-section {
+      padding: 72px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .pricing-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .pricing-header h2 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--siigo-dark);
+      margin-bottom: 10px;
+    }
+    .pricing-header p {
+      color: var(--siigo-gray-text);
+      font-size: .95rem;
+    }
+
+    /* Toggle mensual / anual */
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 48px;
+    }
+    .toggle-label {
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--siigo-gray-text);
+      cursor: pointer;
+      transition: color .2s;
+    }
+    .toggle-label.active { color: var(--siigo-blue); }
+
+    .toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: #CBD5E1;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background .25s;
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      left: 4px;
+      top: 4px;
+      background: var(--white);
+      border-radius: 50%;
+      transition: transform .25s;
+    }
+    .toggle input:checked + .toggle-slider { background: var(--siigo-blue); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(24px); }
+
+    .anual-badge {
+      background: var(--siigo-yellow);
+      color: var(--siigo-dark);
+      font-size: .72rem;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 12px;
+    }
+
+    /* Cards grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .price-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 24px 32px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      transition: transform .2s, box-shadow .2s;
+      border: 2px solid transparent;
+    }
+    .price-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,.12);
+    }
+    .price-card.popular {
+      border-color: var(--siigo-blue);
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--siigo-blue);
+      color: var(--white);
+      font-size: .72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      padding: 4px 16px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .card-tag {
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--siigo-green);
+      margin-bottom: 8px;
+    }
+
+    .card-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--siigo-dark);
+      margin-bottom: 4px;
+    }
+
+    .card-desc {
+      font-size: .82rem;
+      color: var(--siigo-gray-text);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .discount-badge {
+      display: inline-block;
+      background: #FFF3E0;
+      color: #E65100;
+      font-size: .72rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 10px;
+      margin-bottom: 6px;
+    }
+
+    .price-before {
+      font-size: .82rem;
+      color: #9CA3AF;
+      text-decoration: line-through;
+      margin-bottom: 2px;
+    }
+
+    .price-main {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--siigo-blue);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .price-main sup { font-size: 1.1rem; vertical-align: super; }
+    .price-main .period { font-size: .85rem; font-weight: 500; color: var(--siigo-gray-text); }
+
+    .price-note {
+      font-size: .74rem;
+      color: #9CA3AF;
+      margin-bottom: 20px;
+    }
+
+    .card-divider {
+      border: none;
+      border-top: 1px solid #F0F0F0;
+      margin-bottom: 18px;
+    }
+
+    .features-list {
+      list-style: none;
+      flex: 1;
+      margin-bottom: 24px;
+    }
+    .features-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: .83rem;
+      color: #374151;
+      padding: 5px 0;
+      line-height: 1.4;
+    }
+    .features-list li::before {
+      content: '✓';
+      color: var(--siigo-green);
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .card-btn {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      border-radius: 8px;
+      font-size: .92rem;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      transition: background .2s, transform .1s;
+    }
+    .card-btn:hover { transform: translateY(-1px); }
+
+    .btn-blue {
+      background: var(--siigo-blue);
+      color: var(--white);
+    }
+    .btn-blue:hover { background: var(--siigo-blue-dark); }
+
+    .btn-green {
+      background: var(--siigo-green);
+      color: var(--white);
+      text-decoration: none;
+    }
+    .btn-green:hover { background: var(--siigo-green-dark); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--siigo-blue);
+      border: 2px solid var(--siigo-blue);
+    }
+    .btn-outline:hover { background: var(--siigo-blue); color: var(--white); }
+
+    /* Free card special */
+    .price-free {
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: var(--siigo-green);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--siigo-dark);
+      color: rgba(255,255,255,.6);
+      text-align: center;
+      padding: 24px;
+      font-size: .82rem;
+    }
+    footer span { color: var(--white); font-weight: 600; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .banner { flex-direction: column; padding: 48px 24px; text-align: center; }
+      .banner-img { display: none; }
+      .banner h1 { font-size: 1.8rem; }
+      .banner-btns { justify-content: center; }
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .pricing-section { padding: 48px 20px; }
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo">Siigo <span>Contífico</span></div>
+  <ul class="nav-links">
+    <li><a href="#">Planes y precios</a></li>
+    <li><a href="#">Productos</a></li>
+    <li><a href="#">Blog</a></li>
+    <li><a href="#">Contacto</a></li>
+  </ul>
+  <button class="nav-cta">Iniciar sesión</button>
+</nav>
+
+<!-- BANNER -->
+<section class="banner">
+  <div class="banner-content">
+    <span class="banner-badge">🇪🇨 Ecuador · Software en la nube</span>
+    <h1>Software Contable y<br><span>Administrativo</span> para tu empresa</h1>
+    <p>Administra tu empresa, factura electrónicamente desde cualquier lugar y cumple con las normativas del SRI. Fácil de usar, con soporte ilimitado.</p>
+    <div class="banner-btns">
+      <button class="btn-primary">Ver planes y precios</button>
+      <button class="btn-secondary">Hablar con un asesor</button>
+    </div>
+  </div>
+  <div class="banner-img">
+    <svg width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="20" width="60" height="44" rx="6" fill="white" fill-opacity=".25"/>
+      <rect x="18" y="30" width="44" height="6" rx="3" fill="white" fill-opacity=".5"/>
+      <rect x="18" y="42" width="30" height="4" rx="2" fill="white" fill-opacity=".4"/>
+      <rect x="18" y="52" width="20" height="4" rx="2" fill="white" fill-opacity=".3"/>
+      <circle cx="62" cy="26" r="12" fill="#00C389" fill-opacity=".8"/>
+      <text x="56" y="31" font-size="13" fill="white" font-weight="bold">$</text>
+    </svg>
+    <p>Dashboard Contífico</p>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section">
+  <div class="pricing-header">
+    <h2>Encuentra el plan ideal para tu negocio</h2>
+    <p>Precios sin IVA · Descuento aplica para clientes nuevos</p>
+  </div>
+
+  <div class="toggle-wrap">
+    <span class="toggle-label active" id="label-mensual">Mensual</span>
+    <label class="toggle">
+      <input type="checkbox" id="period-toggle" />
+      <span class="toggle-slider"></span>
+    </label>
+    <span class="toggle-label" id="label-anual">Anual <span class="anual-badge">Ahorra hasta 30%</span></span>
+  </div>
+
+  <div class="cards-grid">
+
+    <!-- Card 1: FE Gratis -->
+    <div class="price-card">
+      <div class="card-tag">Facturación Electrónica</div>
+      <div class="card-name">Plan Gratis</div>
+      <div class="card-desc">Ideal para comenzar a facturar electrónicamente sin costo.</div>
+      <div class="price-free">Gratis</div>
+      <div class="price-note" style="margin-top:4px">24 documentos electrónicos / año</div>
+      <hr class="card-divider">
+      <ul class="features-list">
+        <li>24 Documentos electrónicos anuales</li>
+        <li>Cobros y pagos</li>
+        <li>Manejo de clientes y productos</li>
+        <li>Soporte ilimitado</li>
+        <li>App Contífico</li>
+        <li>1 Usuario</li>
+      </ul>
+      <button class="card-btn btn-blue">¡Empezar gratis!</button>
+    </div>
+
+    <!-- Card 2: FE 48 -->
+    <div class="price-card">
+      <div class="card-tag">Facturación Electrónica</div>
+      <div class="card-name">FE 48</div>
+      <div class="card-desc">Para negocios con mayor volumen de facturación anual.</div>
+      <span class="discount-badge" id="badge-fe48">-30% cliente nuevo</span>
+      <div class="price-before" id="before-fe48">Antes $20,50 / año</div>
+      <div class="price-main" id="price-fe48"><sup>$</sup>14,35 <span class="period">/ año</span></div>
+      <div class="price-note">Precios sin IVA</div>
+      <hr class="card-divider">
+      <ul class="features-list">
+        <li>48 Documentos electrónicos anuales</li>
+        <li>Cobros y pagos</li>
+        <li>Manejo de clientes y productos</li>
+        <li>Soporte ilimitado</li>
+        <li>App Contífico</li>
+        <li>2 Usuarios</li>
+      </ul>
+      <button class="card-btn btn-outline">Contactar asesor</button>
+    </div>
+
+    <!-- Card 3: Sistema Contable Esencial (Popular) -->
+    <div class="price-card popular">
+      <div class="popular-badge">⭐ Más popular</div>
+      <div class="card-tag">Sistema Contable</div>
+      <div class="card-name">Esencial</div>
+      <div class="card-desc">El plan más completo para empresas que necesitan contabilidad y facturación.</div>
+      <span class="discount-badge" id="badge-sc">-20% cliente nuevo</span>
+      <div class="price-before" id="before-sc">Antes $441,00 / año</div>
+      <div class="price-main" id="price-sc"><sup>$</sup>352,80 <span class="period">/ año</span></div>
+      <div class="price-note">Precios sin IVA</div>
+      <hr class="card-divider">
+      <ul class="features-list">
+        <li>Documentos electrónicos ilimitados</li>
+        <li>2 usuarios + 1 usuario contador</li>
+        <li>Contabilidad completa</li>
+        <li>Inventario y compras</li>
+        <li>Soporte ilimitado</li>
+        <li>App Contífico</li>
+      </ul>
+      <a href="/cuenta.html" class="card-btn btn-green">Comprar ahora</a>
+    </div>
+
+    <!-- Card 4: Plan Contador -->
+    <div class="price-card">
+      <div class="card-tag">Plan Contador</div>
+      <div class="card-name">Contador Ilimitado</div>
+      <div class="card-desc">Para contadores que gestionan múltiples empresas desde un solo lugar.</div>
+      <div class="price-main" style="font-size:1.2rem;color:var(--siigo-gray-text)" id="price-cont">Solo plan anual</div>
+      <div class="price-note">Disponible únicamente en periodicidad anual</div>
+      <hr class="card-divider">
+      <ul class="features-list">
+        <li>Empresas ilimitadas</li>
+        <li>Facturación electrónica</li>
+        <li>Módulo contable completo</li>
+        <li>Soporte prioritario</li>
+        <li>App Contífico</li>
+      </ul>
+      <button class="card-btn btn-outline">Contactar asesor</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  &copy; 2025 <span>Siigo Contífico Ecuador</span> · Todos los derechos reservados
+</footer>
+
+<script>
+  const toggle = document.getElementById('period-toggle');
+  const labelM = document.getElementById('label-mensual');
+  const labelA = document.getElementById('label-anual');
+
+  // Precios base y anual por tarjeta
+  const planes = {
+    fe48:  { mensual: { before: '$20,50 / mes',  price: '$14,35', period: '/ mes',  badge: '-30% cliente nuevo' },
+              anual:   { before: '$246,00 / año', price: '$14,35', period: '/ año',  badge: '-30% cliente nuevo' } },
+    sc:    { mensual: { before: '$44,10 / mes',  price: '$35,28', period: '/ mes',  badge: '-20% cliente nuevo' },
+              anual:   { before: '$441,00 / año', price: '$352,80',period: '/ año',  badge: '-20% cliente nuevo' } }
+  };
+
+  toggle.addEventListener('change', () => {
+    const isAnual = toggle.checked;
+    labelM.classList.toggle('active', !isAnual);
+    labelA.classList.toggle('active', isAnual);
+
+    const period = isAnual ? 'anual' : 'mensual';
+
+    // FE48
+    const fe = planes.fe48[period];
+    document.getElementById('before-fe48').textContent = 'Antes ' + fe.before;
+    document.getElementById('price-fe48').innerHTML = `<sup>$</sup>${fe.price.replace('$','')} <span class="period">${fe.period}</span>`;
+    document.getElementById('badge-fe48').textContent = fe.badge;
+
+    // SC Esencial
+    const sc = planes.sc[period];
+    document.getElementById('before-sc').textContent = 'Antes ' + sc.before;
+    document.getElementById('price-sc').innerHTML = `<sup>$</sup>${sc.price.replace('$','')} <span class="period">${sc.period}</span>`;
+    document.getElementById('badge-sc').textContent = sc.badge;
+
+    // Contador solo anual
+    const cont = document.getElementById('price-cont');
+    cont.style.color = isAnual ? 'var(--siigo-blue)' : 'var(--siigo-gray-text)';
+    cont.innerHTML = isAnual
+      ? '<sup>$</sup>Consultar <span class="period">/ año</span>'
+      : 'Solo plan anual';
+  });
+</script>
+</body>
+</html>
