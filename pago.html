@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finaliza tu compra | Siigo Ecuador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue-700:#003D8F;
+    --blue-600:#0057C7;
+    --blue-500:#0072E5;
+    --blue-400:#2E9BFF;
+    --blue-100:#E7F1FF;
+    --navy:#152A4E;
+    --text:#2B3A55;
+    --text-muted:#6B7A94;
+    --bg:#EEF2F7;
+    --card-bg:#FFFFFF;
+    --border:#DFE5EE;
+    --border-focus:var(--blue-500);
+    --asterisk:#F2994A;
+    --success:#1DAF6D;
+    --error:#E0483E;
+    --radius-lg:16px;
+    --radius-md:10px;
+    --radius-sm:6px;
+    --shadow-card:0 1px 2px rgba(21,42,78,.04), 0 4px 16px rgba(21,42,78,.06);
+    --font: 'Nunito Sans', -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:var(--font);
+    background:var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{color:var(--blue-500); text-decoration:none;}
+
+  .topbar{
+    background:var(--card-bg);
+    border-bottom:1px solid var(--border);
+    padding:16px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .logo{
+    font-weight:800;
+    font-size:22px;
+    color:var(--blue-600);
+    letter-spacing:-.5px;
+  }
+  .logo span{color:var(--navy);}
+  .steps{
+    display:flex;
+    gap:8px;
+    font-size:13px;
+    color:var(--text-muted);
+  }
+  .steps b{color:var(--blue-600);}
+
+  .page{
+    max-width:1120px;
+    margin:0 auto;
+    padding:40px 24px 80px;
+  }
+
+  .page-header{margin-bottom:28px;}
+  .page-header h1{
+    font-size:32px;
+    font-weight:800;
+    color:var(--navy);
+    margin-bottom:8px;
+  }
+  .page-header p{
+    font-size:15px;
+    color:var(--text-muted);
+  }
+
+  .layout{
+    display:grid;
+    grid-template-columns:1fr 360px;
+    gap:24px;
+    align-items:start;
+  }
+
+  .main-col{display:flex; flex-direction:column; gap:24px;}
+
+  .card{
+    background:var(--card-bg);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-card);
+    padding:28px;
+  }
+  .card h2{
+    font-size:19px;
+    font-weight:800;
+    color:var(--navy);
+    margin-bottom:20px;
+  }
+
+  .checkbox-row{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    font-size:13.5px;
+    color:var(--text-muted);
+    margin-bottom:18px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .checkbox-row input[type="checkbox"]{
+    width:18px; height:18px; margin-top:1px;
+    accent-color:var(--blue-500);
+    flex-shrink:0;
+    cursor:pointer;
+  }
+
+  /* ---- Método de pago (tarjeta visual + form) ---- */
+  .payment-grid{
+    display:grid;
+    grid-template-columns:1fr 300px;
+    gap:28px;
+  }
+  .form-fields{display:flex; flex-direction:column; gap:16px;}
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+
+  .field{position:relative; display:flex; flex-direction:column; gap:5px;}
+  .field label{
+    font-size:13px;
+    color:var(--text-muted);
+    display:flex;
+    gap:3px;
+  }
+  .field .req{color:var(--asterisk); font-weight:700;}
+  .field input, .field select{
+    font-family:var(--font);
+    font-size:14.5px;
+    color:var(--text);
+    padding:12px 14px;
+    border:1.5px solid var(--border);
+    border-radius:var(--radius-md);
+    background:var(--card-bg);
+    outline:none;
+    transition:border-color .15s, box-shadow .15s;
+    width:100%;
+  }
+  .field select{appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230072E5' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:34px;}
+  .field input:focus, .field select:focus{
+    border-color:var(--border-focus);
+    box-shadow:0 0 0 3px var(--blue-100);
+  }
+  .field input.invalid, .field select.invalid{border-color:var(--error);}
+  .field .hint{font-size:12px; color:var(--text-muted);}
+  .field .error-msg{font-size:12px; color:var(--error); display:none;}
+  .field.has-error .error-msg{display:block;}
+
+  /* Tarjeta visual */
+  .credit-card{
+    position:relative;
+    height:180px;
+    border-radius:16px;
+    background:linear-gradient(135deg, var(--blue-400) 0%, var(--blue-600) 60%, var(--blue-700) 100%);
+    color:#fff;
+    padding:22px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    overflow:hidden;
+    box-shadow:0 10px 24px rgba(0,87,199,.25);
+  }
+  .credit-card::after{
+    content:"";
+    position:absolute;
+    right:-40px; top:-40px;
+    width:160px; height:160px;
+    background:rgba(255,255,255,.08);
+    border-radius:50%;
+  }
+  .cc-number{
+    font-size:19px;
+    letter-spacing:2.5px;
+    font-weight:700;
+    z-index:1;
+  }
+  .cc-bottom{display:flex; justify-content:space-between; align-items:flex-end; z-index:1;}
+  .cc-name{font-weight:700; font-size:14px; text-transform:uppercase; letter-spacing:.5px; max-width:70%; word-break:break-word;}
+  .cc-exp{font-size:13px; font-weight:600; opacity:.9;}
+
+  /* ---- Sidebar resumen ---- */
+  .summary{
+    background:var(--card-bg);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-card);
+    padding:24px;
+    position:sticky;
+    top:24px;
+  }
+  .summary h2{font-size:18px; font-weight:800; color:var(--navy); margin-bottom:16px;}
+  .plan-name{font-size:15px; font-weight:700; color:var(--text); margin-bottom:14px;}
+  .summary-row{
+    display:flex; justify-content:space-between;
+    font-size:14px; color:var(--text-muted);
+    padding:10px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .summary-total{
+    display:flex; justify-content:space-between;
+    align-items:center;
+    padding:16px 0 20px;
+    font-weight:800;
+    color:var(--navy);
+    font-size:17px;
+  }
+  .summary-total span:last-child{color:var(--blue-600); font-size:20px;}
+
+  .btn-pay{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:var(--radius-md);
+    background:var(--border);
+    color:#9AA5B5;
+    font-family:var(--font);
+    font-weight:700;
+    font-size:15px;
+    cursor:not-allowed;
+    transition:background .15s, color .15s, transform .1s;
+  }
+  .btn-pay.enabled{
+    background:linear-gradient(135deg, var(--blue-500), var(--blue-600));
+    color:#fff;
+    cursor:pointer;
+    box-shadow:0 6px 16px rgba(0,114,229,.3);
+  }
+  .btn-pay.enabled:hover{transform:translateY(-1px);}
+  .btn-pay.enabled:active{transform:translateY(0);}
+
+  .secure-note{
+    display:flex; align-items:center; gap:6px;
+    justify-content:center;
+    font-size:12px;
+    color:var(--text-muted);
+    margin-top:14px;
+  }
+
+  .footer-nav{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-top:8px;
+    font-weight:700;
+    font-size:14px;
+  }
+
+  @media (max-width: 900px){
+    .layout{grid-template-columns:1fr;}
+    .payment-grid{grid-template-columns:1fr;}
+    .field-row{grid-template-columns:1fr;}
+    .summary{position:static;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="logo">siigo<span>.</span></div>
+    <div class="steps">Datos de cuenta &nbsp;→&nbsp; <b>Pago</b> &nbsp;→&nbsp; Confirmación</div>
+  </div>
+
+  <div class="page">
+    <div class="page-header">
+      <h1>Finaliza tu compra</h1>
+      <p>Finaliza tu compra y empieza a hacer uso de tu Sistema Contable Esencial</p>
+    </div>
+
+    <form class="layout" id="checkout-form" novalidate>
+      <div class="main-col">
+
+        <!-- Método de pago -->
+        <section class="card">
+          <h2>Método de pago</h2>
+          <div class="payment-grid">
+            <div class="form-fields">
+              <div class="field">
+                <label>Número de la tarjeta<span class="req">*</span></label>
+                <input type="text" id="cardNumber" inputmode="numeric" maxlength="19" placeholder="0000 0000 0000 0000" required>
+                <span class="error-msg">Ingresa un número de tarjeta válido.</span>
+              </div>
+              <div class="field">
+                <label>Nombre en la tarjeta<span class="req">*</span></label>
+                <input type="text" id="cardName" placeholder="Tal como aparece en la tarjeta" required>
+                <span class="hint">Tal como aparece en la tarjeta</span>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label>Fecha de expiración<span class="req">*</span></label>
+                  <input type="text" id="cardExp" inputmode="numeric" maxlength="5" placeholder="MM / AA" required>
+                  <span class="hint">MM / AA</span>
+                </div>
+                <div class="field">
+                  <label>CVV<span class="req">*</span></label>
+                  <input type="password" id="cardCvv" inputmode="numeric" maxlength="4" placeholder="***" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="credit-card">
+              <div class="cc-number" id="ccPreviewNumber">**** **** **** ****</div>
+              <div class="cc-bottom">
+                <div class="cc-name" id="ccPreviewName">Nombre en la tarjeta</div>
+                <div class="cc-exp" id="ccPreviewExp">MM / AA</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Datos del titular -->
+        <section class="card">
+          <h2>Datos del titular de la tarjeta de crédito</h2>
+          <div class="form-fields">
+            <div class="field-row">
+              <div class="field">
+                <label>Tipo de identificación<span class="req">*</span></label>
+                <select id="titIdType" required>
+                  <option value="">Selecciona</option>
+                  <option value="cedula">Cédula</option>
+                  <option value="pasaporte">Pasaporte</option>
+                  <option value="ruc">RUC</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Número identificación<span class="req">*</span></label>
+                <input type="text" id="titIdNumber" inputmode="numeric" placeholder="Número Identificación" required>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Nombres<span class="req">*</span></label>
+                <input type="text" id="titNombres" placeholder="Nombres" required>
+                <span class="error-msg">Solo se permiten caracteres alfabéticos.</span>
+              </div>
+              <div class="field">
+                <label>Apellidos<span class="req">*</span></label>
+                <input type="text" id="titApellidos" placeholder="Apellidos" required>
+                <span class="error-msg">Solo se permiten caracteres alfabéticos.</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Celular<span class="req">*</span></label>
+                <input type="text" id="titCelular" inputmode="numeric" maxlength="10" placeholder="09XXXXXXXX" required>
+                <span class="error-msg">Ingresa 9 dígitos, iniciando en 9.</span>
+              </div>
+              <div class="field">
+                <label>Email<span class="req">*</span></label>
+                <input type="email" id="titEmail" placeholder="Email" required>
+                <span class="error-msg">Ingresa un correo válido.</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Provincia<span class="req">*</span></label>
+                <select id="titProvincia" required>
+                  <option value="">Selecciona</option>
+                  <option>Pichincha</option>
+                  <option>Guayas</option>
+                  <option>Azuay</option>
+                  <option>Manabí</option>
+                  <option>El Oro</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Ciudad<span class="req">*</span></label>
+                <select id="titCiudad" required>
+                  <option value="">Selecciona</option>
+                  <option>Quito</option>
+                  <option>Guayaquil</option>
+                  <option>Cuenca</option>
+                  <option>Manta</option>
+                  <option>Machala</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Dirección<span class="req">*</span></label>
+              <input type="text" id="titDireccion" placeholder="Dirección" required>
+            </div>
+          </div>
+        </section>
+
+        <!-- Datos de facturación -->
+        <section class="card">
+          <h2>Datos de facturación</h2>
+          <label class="checkbox-row">
+            <input type="checkbox" id="mismosDatos">
+            Los datos de facturación son los mismos ingresados previamente
+          </label>
+          <div class="form-fields" id="facturacionFields">
+            <div class="field">
+              <label>Nombre o razón social<span class="req">*</span></label>
+              <input type="text" id="factRazonSocial" placeholder="Nombre o razón social" required>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Tipo de identificación<span class="req">*</span></label>
+                <select id="factIdType" required>
+                  <option value="">Selecciona</option>
+                  <option value="cedula">Cédula</option>
+                  <option value="pasaporte">Pasaporte</option>
+                  <option value="ruc">RUC</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Número de identificación<span class="req">*</span></label>
+                <input type="text" id="factIdNumber" inputmode="numeric" placeholder="Número de identificación" required>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Celular<span class="req">*</span></label>
+                <input type="text" id="factCelular" inputmode="numeric" maxlength="10" placeholder="09XXXXXXXX" required>
+                <span class="error-msg">Ingresa 9 dígitos, iniciando en 9.</span>
+              </div>
+              <div class="field">
+                <label>Correo electrónico<span class="req">*</span></label>
+                <input type="email" id="factEmail" placeholder="Correo electrónico" required>
+                <span class="error-msg">Ingresa un correo válido.</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Provincia<span class="req">*</span></label>
+                <select id="factProvincia" required>
+                  <option value="">Selecciona</option>
+                  <option>Pichincha</option>
+                  <option>Guayas</option>
+                  <option>Azuay</option>
+                  <option>Manabí</option>
+                  <option>El Oro</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Ciudad<span class="req">*</span></label>
+                <select id="factCiudad" required>
+                  <option value="">Selecciona</option>
+                  <option>Quito</option>
+                  <option>Guayaquil</option>
+                  <option>Cuenca</option>
+                  <option>Manta</option>
+                  <option>Machala</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Dirección<span class="req">*</span></label>
+              <input type="text" id="factDireccion" placeholder="Dirección" required>
+            </div>
+          </div>
+        </section>
+
+        <a href="/cuenta.html" class="footer-nav">← Anterior</a>
+      </div>
+
+      <!-- Resumen de compra -->
+      <aside class="summary">
+        <h2>Resumen de compra</h2>
+        <div class="plan-name">Sistema Contable Esencial</div>
+        <div class="summary-row">
+          <span>Subtotal + IVA</span>
+          <span>$ 352,80</span>
+        </div>
+        <div class="summary-total">
+          <span>Valor a pagar</span>
+          <span>$ 352,80</span>
+        </div>
+        <label class="checkbox-row" style="margin-bottom:16px;">
+          <input type="checkbox" id="confirmCheck">
+          Confirma los datos ingresados antes de pagar.
+        </label>
+        <button type="submit" class="btn-pay" id="btnPay" disabled>Confirmar y pagar</button>
+        <div class="secure-note">🔒 Pago procesado de forma segura</div>
+      </aside>
+    </form>
+  </div>
+
+<script>
+(function(){
+  const form = document.getElementById('checkout-form');
+
+  /* ---------- Tarjeta: formateo + preview en vivo ---------- */
+  const cardNumber = document.getElementById('cardNumber');
+  const cardName = document.getElementById('cardName');
+  const cardExp = document.getElementById('cardExp');
+  const cardCvv = document.getElementById('cardCvv');
+
+  const ccPreviewNumber = document.getElementById('ccPreviewNumber');
+  const ccPreviewName = document.getElementById('ccPreviewName');
+  const ccPreviewExp = document.getElementById('ccPreviewExp');
+
+  cardNumber.addEventListener('input', () => {
+    let digits = cardNumber.value.replace(/\D/g,'').slice(0,16);
+    cardNumber.value = digits.replace(/(.{4})/g,'$1 ').trim();
+    let masked = digits.padEnd(16,'•').replace(/(.{4})/g,'$1 ').trim();
+    ccPreviewNumber.textContent = digits ? masked : '**** **** **** ****';
+  });
+
+  cardName.addEventListener('input', () => {
+    ccPreviewName.textContent = cardName.value.trim() ? cardName.value.toUpperCase() : 'NOMBRE EN LA TARJETA';
+  });
+
+  cardExp.addEventListener('input', () => {
+    let digits = cardExp.value.replace(/\D/g,'').slice(0,4);
+    if (digits.length >= 3) digits = digits.slice(0,2) + ' / ' + digits.slice(2);
+    cardExp.value = digits;
+    ccPreviewExp.textContent = digits || 'MM / AA';
+  });
+
+  cardCvv.addEventListener('input', () => {
+    cardCvv.value = cardCvv.value.replace(/\D/g,'').slice(0,4);
+  });
+
+  /* ---------- Teléfonos EC: 10 dígitos, inicia en 9 ---------- */
+  function bindPhone(id){
+    const el = document.getElementById(id);
+    el.addEventListener('input', () => {
+      el.value = el.value.replace(/\D/g,'').slice(0,10);
+    });
+  }
+  bindPhone('titCelular');
+  bindPhone('factCelular');
+
+  /* ---------- Nombres/apellidos: solo alfabético ---------- */
+  function bindAlpha(id){
+    const el = document.getElementById(id);
+    el.addEventListener('input', () => {
+      el.value = el.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g,'');
+    });
+  }
+  bindAlpha('titNombres');
+  bindAlpha('titApellidos');
+
+  /* ---------- Copiar datos del titular a facturación ---------- */
+  const mismosDatos = document.getElementById('mismosDatos');
+  const facturacionFields = document.getElementById('facturacionFields');
+  const factInputs = facturacionFields.querySelectorAll('input, select');
+
+  mismosDatos.addEventListener('change', () => {
+    const checked = mismosDatos.checked;
+    factInputs.forEach(el => el.disabled = checked);
+    facturacionFields.style.opacity = checked ? '.55' : '1';
+    if (checked){
+      document.getElementById('factRazonSocial').value = (document.getElementById('titNombres').value + ' ' + document.getElementById('titApellidos').value).trim();
+      document.getElementById('factIdType').value = document.getElementById('titIdType').value;
+      document.getElementById('factIdNumber').value = document.getElementById('titIdNumber').value;
+      document.getElementById('factCelular').value = document.getElementById('titCelular').value;
+      document.getElementById('factEmail').value = document.getElementById('titEmail').value;
+      document.getElementById('factProvincia').value = document.getElementById('titProvincia').value;
+      document.getElementById('factCiudad').value = document.getElementById('titCiudad').value;
+      document.getElementById('factDireccion').value = document.getElementById('titDireccion').value;
+    }
+  });
+
+  /* ---------- Habilitar botón pagar solo con checkbox de confirmación ---------- */
+  const confirmCheck = document.getElementById('confirmCheck');
+  const btnPay = document.getElementById('btnPay');
+  confirmCheck.addEventListener('change', () => {
+    btnPay.disabled = !confirmCheck.checked;
+    btnPay.classList.toggle('enabled', confirmCheck.checked);
+  });
+
+  /* ---------- Validación simple al enviar ---------- */
+  function markError(el, isValid){
+    const field = el.closest('.field');
+    if (!field) return;
+    field.classList.toggle('invalid', !isValid);
+    el.classList.toggle('invalid', !isValid);
+    field.classList.toggle('has-error', !isValid);
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let valid = true;
+
+    // requeridos visibles y no deshabilitados
+    form.querySelectorAll('[required]').forEach(el => {
+      if (el.disabled) return;
+      const ok = el.value.trim() !== '';
+      if (!ok) valid = false;
+      markError(el, ok);
+    });
+
+    // celular EC: 10 dígitos, empieza en 9
+    ['titCelular','factCelular'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el.disabled) return;
+      const ok = /^9\d{9}$/.test(el.value);
+      if (!ok) valid = false;
+      markError(el, ok);
+    });
+
+    // email válido
+    ['titEmail','factEmail'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el.disabled) return;
+      const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value);
+      if (!ok) valid = false;
+      markError(el, ok);
+    });
+
+    if (!confirmCheck.checked){
+      valid = false;
+    }
+
+    if (!valid){
+      const firstError = form.querySelector('.invalid, .has-error');
+      if (firstError) firstError.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+
+    // Simulación de envío — aquí se integraría el componente de pagos (Tienda de Firmas)
+    btnPay.textContent = 'Procesando...';
+    btnPay.disabled = true;
+    setTimeout(() => {
+      window.location.href = 'pago-exitoso.html';
+    }, 1200);
+  });
+})();
+</script>
+</body>
+</html>
