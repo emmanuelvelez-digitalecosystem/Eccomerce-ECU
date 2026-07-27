@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cotización Comercial - Conty Cloud</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #ffffff;
+    color: #1c2b39;
+  }
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(120deg, #0a2f4d 0%, #1c6fa5 60%, #2a9fd6 100%);
+    color: #ffffff;
+    border-radius: 22px 22px 0 0;
+    padding: 40px 40px 55px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .header-left { max-width: 60%; min-width: 280px; }
+  .eyebrow {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #a9d7f2;
+    margin: 0 0 10px 0;
+  }
+  .header-title {
+    font-size: 38px;
+    font-weight: 800;
+    margin: 0 0 12px 0;
+  }
+  .header-sub {
+    font-size: 16px;
+    color: #dcecf7;
+    margin: 0;
+    max-width: 460px;
+    line-height: 1.5;
+  }
+  .header-right {
+    text-align: right;
+    min-width: 160px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .logo span.divider { color: #dcecf7; font-weight: 300; }
+  .logo .memory { font-weight: 400; }
+  .meta { font-size: 13px; color: #dcecf7; margin: 3px 0; }
+
+  /* STATS */
+  .stats {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    background: #ffffff;
+    padding: 40px 20px;
+    margin-top: -25px;
+  }
+  .stat { text-align: center; padding: 10px 15px; }
+  .stat-number {
+    font-size: 30px;
+    font-weight: 800;
+    color: #12395c;
+    margin: 0;
+  }
+  .stat-label {
+    font-size: 14px;
+    color: #6b7a89;
+    margin: 4px 0 0 0;
+  }
+
+  /* SECTION HEADINGS */
+  .section { padding: 10px 40px 30px 40px; }
+  .section-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #12395c;
+    margin: 0 0 16px 0;
+  }
+
+  /* PLAN COTIZADO TABLE */
+  .quote-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #dbe6ee;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .quote-table th {
+    background-color: #eef3f8;
+    text-align: left;
+    font-size: 15px;
+    font-weight: 700;
+    color: #12395c;
+    padding: 14px 18px;
+  }
+  .quote-table td {
+    font-size: 14px;
+    color: #37465a;
+    padding: 12px 18px;
+    border-top: 1px solid #eef3f8;
+  }
+
+  /* EMPRESA WIDE CARD */
+  .empresa-card {
+    background-color: #eef3f8;
+    border-radius: 16px;
+    padding: 24px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .empresa-left h3 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+    color: #1c2b39;
+  }
+  .empresa-features {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    font-size: 15px;
+    color: #37465a;
+  }
+  .empresa-price { text-align: right; }
+  .empresa-price .price {
+    font-size: 30px;
+    font-weight: 800;
+    color: #12395c;
+  }
+  .empresa-price .period {
+    font-size: 13px;
+    color: #8a97a6;
+  }
+
+  /* PLAN CARDS GRID */
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .plan-card {
+    background-color: #ffffff;
+    border: 1px solid #e6ecf2;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0px 8px 20px -8px rgba(20,60,95,0.15);
+  }
+  .plan-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2a9fd6;
+    margin: 0 0 8px 0;
+  }
+  .plan-price {
+    font-size: 26px;
+    font-weight: 800;
+    color: #1c2b39;
+    margin: 0;
+  }
+  .plan-period {
+    font-size: 12px;
+    color: #8a97a6;
+    margin: 0 0 14px 0;
+  }
+  .plan-divider {
+    border-top: 1px solid #eef1f5;
+    margin: 12px 0;
+  }
+  .plan-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 13.5px;
+    color: #37465a;
+    line-height: 1.9;
+  }
+
+  /* FOOTNOTE */
+  .footnote {
+    font-size: 13px;
+    color: #8a97a6;
+    padding: 20px 40px 0 40px;
+    border-top: 1px solid #eef1f5;
+    line-height: 1.6;
+  }
+
+  /* PAYMENT BAR */
+  .payment-bar {
+    background-color: #0a2f4d;
+    border-radius: 16px;
+    margin: 30px 40px;
+    padding: 22px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  .payment-text {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+  }
+  .payment-btn {
+    background-color: #4ec1ec;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 12px 26px;
+    border-radius: 30px;
+    white-space: nowrap;
+  }
+
+  /* CONTACT FOOTER */
+  .contact-footer {
+    background-color: #f4f7fa;
+    border-radius: 0 0 22px 22px;
+    padding: 18px 40px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    font-size: 13.5px;
+    color: #5a6b7a;
+  }
+
+  @media (max-width: 700px) {
+    .plans-grid { grid-template-columns: repeat(2, 1fr); }
+    .header-left { max-width: 100%; }
+    .header-right { text-align: left; }
+    .logo { justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <p class="eyebrow">Cotización comercial</p>
+      <p class="header-title">Conty Cloud</p>
+      <p class="header-sub">Nuestro nuevo software de contabilidad en la nube, hecho para escalar tu estudio o tu empresa.</p>
+    </div>
+    <div class="header-right">
+      <div class="logo">Siigo<span class="divider">|</span><span class="memory">memory</span></div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat">
+      <p class="stat-number">+40</p>
+      <p class="stat-label">años en el mercado</p>
+    </div>
+    <div class="stat">
+      <p class="stat-number">+3000</p>
+      <p class="stat-label">empleados te respaldan</p>
+    </div>
+    <div class="stat">
+      <p class="stat-number">+1.2M</p>
+      <p class="stat-label">clientes en toda LATAM</p>
+    </div>
+    <div class="stat">
+      <p class="stat-number">+95%</p>
+      <p class="stat-label">nos recomiendan</p>
+    </div>
+  </div>
+
+  <!-- PLAN COTIZADO -->
+  <div class="section">
+    [productsTable]
+  </div>
+
+  <!-- PLANES -->
+  <div class="section">
+    <p class="section-title">Conoce todos los planes Conty Cloud:</p>
+    <p style="font-size:16px;font-weight:700;color:#1c2b39;margin:0 0 14px 0;">Plan Conty Cloud · Empresas</p>
+
+    <div class="empresa-card">
+      <div class="empresa-left">
+        <h3>Empresa</h3>
+        <div class="empresa-features">
+          <span>✓ Empresas con Siigo Memory: 1</span>
+          <span>✓ 1 usuario</span>
+          <span>✓ Implementación gratis</span>
+        </div>
+      </div>
+      <div class="empresa-price">
+        <div class="price">$750</div>
+        <div class="period">UYU / mes</div>
+      </div>
+    </div>
+
+    <p style="font-size:16px;font-weight:700;color:#1c2b39;margin:30px 0 14px 0;">Plan Conty Cloud · Estudios contables</p>
+
+    <div class="plans-grid">
+      <div class="plan-card">
+        <p class="plan-name">Plan 1</p>
+        <p class="plan-price">$640</p>
+        <p class="plan-period">UYU / mes</p>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>✓ Empresas con Siigo Memory: Ilimitadas</li>
+          <li>✓ Empresas sin Siigo Memory: 1</li>
+          <li>✓ 1 usuario</li>
+          <li>✓ Implementación gratis</li>
+        </ul>
+      </div>
+
+      <div class="plan-card">
+        <p class="plan-name">Plan 10</p>
+        <p class="plan-price">$1.200</p>
+        <p class="plan-period">UYU / mes</p>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>✓ Empresas con Siigo Memory: Ilimitadas</li>
+          <li>✓ Empresas sin Siigo Memory: 10</li>
+          <li>✓ 3 usuarios</li>
+          <li>✓ Implementación gratis</li>
+        </ul>
+      </div>
+
+      <div class="plan-card">
+        <p class="plan-name">Plan 20</p>
+        <p class="plan-price">$1.990</p>
+        <p class="plan-period">UYU / mes</p>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>✓ Empresas con Siigo Memory: Ilimitadas</li>
+          <li>✓ Empresas sin Siigo Memory: 20</li>
+          <li>✓ 5 usuarios</li>
+          <li>✓ Implementación gratis</li>
+        </ul>
+      </div>
+
+      <div class="plan-card">
+        <p class="plan-name">Plan Avanzado</p>
+        <p class="plan-price">$4.750</p>
+        <p class="plan-period">UYU / mes</p>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>✓ Empresas con Siigo Memory: Ilimitadas</li>
+          <li>✓ Empresas sin Siigo Memory: 250</li>
+          <li>✓ 35 usuarios</li>
+          <li>✓ Implementación gratis</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTNOTE -->
+  <p class="footnote">*Todos los planes incluyen Anexo 2181. Los precios de los productos cotizados no incluyen IVA. *Precio válido para nuevas contrataciones, no aplica a renovaciones de servicios. **El período del contrato es mínimo a 12 meses.</p>
+
+  <!-- PAYMENT BAR -->
+  <div class="payment-bar">
+    <p class="payment-text">¡Consultá aquí todas las formas de pago que tenemos disponibles!</p>
+    <a href="https://memory.com.uy/lp-medios-de-pago/" target="_blank" class="payment-btn">Opciones de pago →</a>
+  </div>
+
+  <!-- CONTACT FOOTER -->
+  <div class="contact-footer">
+    <span>Tel. 2709 0921</span>
+    <span>comercial@memory.com.uy</span>
+    <span>Bvar. Artigas 417 Of 501 · Montevideo, Uruguay</span>
+  </div>
+
+</div>
+
+</body>
+</html>
